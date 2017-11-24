@@ -6,7 +6,7 @@ MINSIZE   <- 4
 MAXSIZE   <- 120
 MINYEAR   <- 2000
 MAXYEAR   <- 2015
-##BY        <- 2
+BY        <- 1
 YEARCLASS <- 2001
 MINAGE    <- 1
 MAXAGE    <- 8
@@ -33,16 +33,15 @@ library(gridConstruct)
 grid <- gridConstruct(d, km=KM, icesSquare=TRUE)
 ## plot(grid)
 ## map("worldHires",add=TRUE)
-
+d <- subset(d, Species == SPECIES)
 ## Data subset
 ## d <- addSpectrum(d,cm.breaks=seq(MINSIZE,MAXSIZE,by=BY))
-d <- addSpectrum(d)
+d <- addSpectrum(d, by=BY)
 d <- addNage(d, ages = MINAGE:MAXAGE)
 d$haulid <- d$haul.id
 ##d <- subset(d, Quarter == QUARTER, Gear != "GRT")
 d <- subset(d, Year %in% MINYEAR:MAXYEAR )
 d <- subset(d, 25<HaulDur & HaulDur<35 )
-d <- subset(d, Species == SPECIES)
 d <- as.data.frame(d, response="Nage")
 d$N <- round(d$Nage)
 
