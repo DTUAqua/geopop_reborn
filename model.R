@@ -1,7 +1,7 @@
 ## Default inputs
 SPECIES   <- "Gadus morhua"
 ## QUARTER   <- 4
-KM        <- 50
+KM        <- 20
 MINSIZE   <- 4
 MAXSIZE   <- 120
 MINYEAR   <- 2000
@@ -10,7 +10,7 @@ MAXYEAR   <- 2015
 YEARCLASS <- 2001
 MINAGE    <- 1
 MAXAGE    <- 8
-DATFILE   <- "EBcod.RData"
+DATFILE   <- "IBTS.RData"
 OUTFILE   <- paste0("results", YEARCLASS, ".RData")
 
 ## For scripting
@@ -26,10 +26,11 @@ d <- local({
     get(ls())
 })
 stopifnot( class(d) == "DATRASraw" )
+d <- subset(d, StatRec != "38G2")
 
 ## Make grid
 library(gridConstruct)
-grid <- gridConstruct(d, km=KM)
+grid <- gridConstruct(d, km=KM, icesSquare=TRUE)
 ## plot(grid)
 ## map("worldHires",add=TRUE)
 
