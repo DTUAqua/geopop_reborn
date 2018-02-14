@@ -1,7 +1,10 @@
+devtools::install_github("alko989/gridConstruct/gridConstruct", ref = "lonlatgrid")
 ## Default inputs
 SPECIES   <- "Gadus morhua"
 ## QUARTER   <- 4
-KM        <- 20
+# KM        <- 10
+LONSTEP   <- 0.9
+LATSTEP   <- 1.5
 MINSIZE   <- 4
 MAXSIZE   <- 120
 MINYEAR   <- 2000
@@ -30,13 +33,15 @@ d <- subset(d, StatRec != "38G2")
 
 ## Make grid
 library(gridConstruct)
-grid <- gridConstruct(d, km=KM, icesSquare=TRUE)
-## plot(grid)
-## map("worldHires",add=TRUE)
+grid <- gridConstruct(d,icesSquare=TRUE, type = "lonlatGrid", lonstep = LONSTEP, latstep = LATSTEP)
+plot(grid)
+map("worldHires",add=TRUE)
 d <- subset(d, Species == SPECIES)
 ## Data subset
 ## d <- addSpectrum(d,cm.breaks=seq(MINSIZE,MAXSIZE,by=BY))
 d <- addSpectrum(d, by=BY)
+
+## TODO: Casper sugested to use yearly ALKs 
 d <- addNage(d, ages = MINAGE:MAXAGE)
 d$haulid <- d$haul.id
 ##d <- subset(d, Quarter == QUARTER, Gear != "GRT")
@@ -124,6 +129,8 @@ pl <- as.list(sdr, "Estimate")
 names(pl$beta) <- colnames(data$A)
 
 ## for(i in 100)image(grid, concTransform(pl$eta[,i]))
+library(animation)
+animation::saveVideo({for(i in 1:416) {image(grid, concTransform(pl$eta[,i])); title(levels(d$time)[i])}})
 
 save(grid, sdr, pl, file=OUTFILE)
 
